@@ -43,16 +43,16 @@ func TestGetPomodoroDuration(t *testing.T) {
 	t.Log("\n", pd)
 }
 
-func TestAddPomodoroDuration(t *testing.T) {
+func TestSetPomodoroDuration(t *testing.T) {
 	n := NewPomodoro()
 	n.Start = GetCurrentTime()
-	AddPomodoroDuration(n)
+	SetPomodoroDuration(n)
 	t.Log("\n", n.Start, n.End)
 }
 
 func TestPomodoroTimer(t *testing.T) {
-	var duration time.Duration = 1
-	ti := Timer(duration, time.Microsecond)
+	var duration time.Duration = 25
+	ti := Timer(duration, time.Second)
 	if ti != false {
 		t.Fail()
 	}
@@ -90,7 +90,7 @@ func TestFormatOutput(t *testing.T) {
 	n.Active = true
 	// Pass the string to the bit bucket operator (underscore) since we are not going to use it in the test
 	_, n.Start = FormatDate(2015, time.January, 1, 0, 0)
-	AddPomodoroDuration(n)
+	SetPomodoroDuration(n)
 
 	expected := []string{"active", "Jan 01 2015 at 00:00:01", "Jan 01 2015 at 00:25:01"}
 	got := FormatOutput(n)
