@@ -25,19 +25,19 @@ func TestGetCurrentTime(t *testing.T) {
 
 func TestSetStartTime(t *testing.T) {
 	po := NewPomodoro()
-	SetStartTime(po)
+	SetStartTime(po, DefaultDuration)
 }
 
 func TestGetStartTime(t *testing.T) {
 	po := NewPomodoro()
-	SetStartTime(po)
+	SetStartTime(po, DefaultDuration)
 	st := GetStartTime(po)
 	t.Log("\n", st)
 }
 
 func TestGetPomodoroDuration(t *testing.T) {
 	po := NewPomodoro()
-	SetStartTime(po)
+	SetStartTime(po, DefaultDuration)
 	time.Sleep(1 * time.Microsecond)
 	pd := GetPomodoroDuration(po)
 	t.Log("\n", pd)
@@ -52,7 +52,7 @@ func TestSetPomodoroDuration(t *testing.T) {
 
 func TestPomodoroTimer(t *testing.T) {
 	var duration time.Duration = 25
-	ti := Timer(duration, time.Second)
+	ti := Timer(duration, time.Millisecond)
 	if ti != false {
 		t.Fail()
 	}

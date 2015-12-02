@@ -10,7 +10,8 @@ const (
 	// in the future this value will be sourced via a .pomodororc file
 	PomodoroLength time.Duration = 25
 
-	DefaultDuration = PomodoroLength * time.Minute
+	// DefaultDuration calculates the default duration of a Pomodoro
+	DefaultDuration = PomodoroLength * time.Second
 
 	// Layout represents the default time layout format to use for time functions
 	Layout string = "Jan 01 2006 at 15:04:01"
@@ -37,7 +38,7 @@ func NewDefaultPomodoro() (n *Pomodoro) {
 	n = NewPomodoro()
 	SetStartTime(n, DefaultDuration)
 	//SetPomodoroDuration(n)
-	StartTimer(n)
+	// StartTimer(n)
 	return n
 }
 
@@ -62,11 +63,13 @@ func SetPomodoroDuration(p *Pomodoro) {
 // later will be used to also set pomodoros in advance
 func SetStartTime(p *Pomodoro, duration time.Duration) {
 	p.Start = GetCurrentTime()
-	timer := time.AfterFunc(duration, go func(end string) {
-		end = "C'est fini!"
-		return
-	}())
-	fmt.Println("Pomodoro started at: ", p.Start.Format(Layout))
+	f := func() {
+		fmt.Println("Timer ended at:", GetCurrentTime().Format(Layout))
+	}
+	fmt.Println("Pomodoro started at:", p.Start.Format(Layout))
+	timer := time.AfterFunc(duration, f)
+	defer timer.Stop()
+	time.Sleep(time.Minute)
 }
 
 // GetStartTime gets the time at which the pomodoro started
@@ -105,6 +108,6 @@ func FormatOutput(p *Pomodoro) (output []string) {
 	return
 }
 
-func StartTimer(p *Pomodoro) {
+// func StartTimer(p *Pomodoro) {
 
-}
+// }
