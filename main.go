@@ -8,7 +8,7 @@ import (
 const (
 	// PomodoroLength defines the default length of a pomodoro
 	// in the future this value will be sourced via a .pomodororc file
-	PomodoroLength time.Duration = 3
+	PomodoroLength time.Duration = 1
 
 	// DefaultDuration calculates the default duration of a Pomodoro
 	DefaultDuration = PomodoroLength * time.Second
@@ -101,7 +101,3 @@ func FormatOutput(p *Pomodoro) (output []string) {
 	output = []string{state, st, ed}
 	return
 }
-
-// func StartTimer(p *Pomodoro) {
-
-// }

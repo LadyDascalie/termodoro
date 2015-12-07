@@ -51,18 +51,19 @@ func TestSetPomodoroDuration(t *testing.T) {
 }
 
 func TestPomodoroTimer(t *testing.T) {
-	//var duration time.Duration = 25
 	tn := time.Now().Local()
 	ti := Timer()
-	if ti != tn.Add(3*time.Second) {
+	if ti.Format(layout) != tn.Add(3*time.Second).Format(layout) {
 		t.Fail()
+		t.Log("\nExpected:", ti, "\nReceived:", tn)
 	}
+	t.Log("\nExpected:", ti, "\nReceived", tn)
 }
 
 func TestFormatDate(t *testing.T) {
 	date, time := FormatDate(2015, time.January, 1, 0, 0)
 	t.Log("\nDate string:", date, "\ntime.Time format:", time)
-	if date != "Jan 01 2015 at 00:00:01" {
+	if date != "Jan 01 2015 at 00:00:01.000" {
 		t.Fail()
 	}
 }
@@ -93,7 +94,7 @@ func TestFormatOutput(t *testing.T) {
 	_, n.Start = FormatDate(2015, time.January, 1, 0, 0)
 	SetPomodoroDuration(n)
 
-	expected := []string{"active", "Jan 01 2015 at 00:00:01", "Jan 01 2015 at 00:25:01"}
+	expected := []string{"active", "Jan 01 2015 at 00:00:01.000", "Jan 01 2015 at 00:01:01.000"}
 	got := FormatOutput(n)
 
 	for i := 0; i < len(got); i++ {
@@ -111,17 +112,3 @@ func TestFormatOutput(t *testing.T) {
 		t.Log("\n Expected:", len(expected), "but got:", len(got))
 	}
 }
-
-// func TestTickerSince(t *testing.T) {
-// 	n := NewPomodoro()
-// 	n.Active = true
-// 	_, n.Start = FormatDate(2015, time.January, 1, 0, 0)
-// 	_, n.End = FormatDate(2015, time.January, 1, 0, 1)
-// 	// po := n.End.Sub(n.Start)
-// 	// c := time.Tick(1 * time.Second)
-// 	tick := time.NewTicker(1 * time.Second)
-// 	for now := range tick.C {
-// 		t.Log(GetCurrentTime().Format(layout), now)
-// 	}
-//
-// }
