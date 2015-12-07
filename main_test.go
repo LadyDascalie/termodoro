@@ -53,11 +53,11 @@ func TestSetPomodoroDuration(t *testing.T) {
 func TestPomodoroTimer(t *testing.T) {
 	tn := time.Now().Local()
 	ti := Timer()
-	if ti.Format(layout) != tn.Add(3*time.Second).Format(layout) {
+	if ti.Format(layout) != tn.Add(1*time.Second).Format(layout) {
 		t.Fail()
-		t.Log("\nExpected:", ti, "\nReceived:", tn)
+		t.Log("\nExpected:", tn, "\nReceived:", ti)
 	}
-	t.Log("\nExpected:", ti, "\nReceived", tn)
+	t.Log("Succesufully added one second")
 }
 
 func TestFormatDate(t *testing.T) {
