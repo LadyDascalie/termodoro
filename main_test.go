@@ -51,9 +51,10 @@ func TestSetPomodoroDuration(t *testing.T) {
 }
 
 func TestPomodoroTimer(t *testing.T) {
-	var duration time.Duration = 25
-	ti := Timer(duration, time.Millisecond)
-	if ti != false {
+	//var duration time.Duration = 25
+	tn := time.Now().Local()
+	ti := Timer()
+	if ti != tn.Add(3*time.Second) {
 		t.Fail()
 	}
 }
