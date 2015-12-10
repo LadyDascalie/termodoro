@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	NewDefaultPomodoro()
+	pomodoro.NewDefaultPomodoro()
+
 }
