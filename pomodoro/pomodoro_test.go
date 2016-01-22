@@ -104,9 +104,10 @@ func TestFormatOutput(t *testing.T) {
 			t.Fail()
 			t.Log(strings.Compare(expected[i], got[i]))
 		}
-		t.Log("\nExpected:", expected[i], "\nReceived:", got[i])
+		// t.Log("\nExpected:", expected[i], "\nReceived:", got[i])
 	}
 
+	// Dont test this anymore, since it's effectively useless
 	if len(expected) != len(got) {
 		t.Fail()
 		t.Log("\n Expected:", len(expected), "but got:", len(got))

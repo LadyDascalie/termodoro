@@ -2,17 +2,20 @@ package pomodoro
 
 import (
 	"fmt"
-	"github.com/0xAX/notificator"
+	"os/exec"
+	"runtime"
 	"time"
+
+	"github.com/0xAX/notificator"
 )
 
 const (
 	// PomodoroLength defines the default length of a pomodoro
 	// in the future this value will be sourced via a .pomodororc file
-	PomodoroLength time.Duration = 3
+	PomodoroLength time.Duration = 25
 
 	// DefaultDuration calculates the default duration of a Pomodoro
-	DefaultDuration = PomodoroLength * time.Second
+	DefaultDuration = PomodoroLength * time.Minute
 
 	// Layout represents the default time layout format to use for time functions
 	Layout string = "Jan 01 2006 at 15:04:01.000"
@@ -31,7 +34,7 @@ type Pomodoro struct {
 
 // NewPomodoro creates a pomodoro object in memory
 func NewPomodoro() *Pomodoro {
-	return &Pomodoro{Active: true, Duration: 0}
+	return &Pomodoro{Active: true, Duration: DefaultDuration}
 }
 
 // NewDefaultPomodoro sets the default values for a new pomodoro
@@ -39,15 +42,13 @@ func NewDefaultPomodoro() (n *Pomodoro) {
 	n = NewPomodoro()
 	ending := Timer()
 	if ending.Format(Layout) != "" {
-		n.Active = false
+		n.Active = true
 	}
 
 	if !n.Active {
-		notify = notificator.New(notificator.Options{
-			AppName: "Termodoro",
-		})
-		notify.Push("Termordoro", "this is the end my friend, my lonely friend, the end...", "", notificator.UR_NORMAL)
+		plsNotify()
 	}
+
 	return
 }
 
@@ -109,4 +110,28 @@ func FormatOutput(p *Pomodoro) (output []string) {
 
 	output = []string{state, st, ed}
 	return
+}
+
+func checkOsVersion() (os string) {
+	os = runtime.GOOS
+	return os
+}
+
+func plsNotify() {
+	os := checkOsVersion()
+	if os == "darwin" {
+		cmd := exec.Command("bash", "-c", `osascript -e  'display  notification  "Your Pomodoro has ended!"  with  title  "Pomodoro"'`)
+		_, err := cmd.Output()
+		if err != nil {
+			fmt.Println("Error sending notification")
+		}
+	} else if os == "linux" {
+		notify = notificator.New(notificator.Options{
+			AppName: "Termodoro",
+		})
+		notify.Push("Termordoro", "Your pomodoro has ended!", "", notificator.UR_NORMAL)
+	} else if os == "window" {
+		fmt.Println("Notifications aren't supported on your platform.")
+	}
+
 }
