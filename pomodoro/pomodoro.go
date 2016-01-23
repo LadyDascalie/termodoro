@@ -46,7 +46,7 @@ func NewDefaultPomodoro() (n *Pomodoro) {
 	}
 
 	if !n.Active {
-		plsNotify()
+		PlsNotify("end")
 	}
 
 	return
@@ -117,21 +117,39 @@ func checkOsVersion() (os string) {
 	return os
 }
 
-func plsNotify() {
-	os := checkOsVersion()
-	if os == "darwin" {
-		cmd := exec.Command("bash", "-c", `osascript -e  'display  notification  "Your Pomodoro has ended!"  with  title  "Pomodoro"'`)
-		_, err := cmd.Output()
-		if err != nil {
-			fmt.Println("Error sending notification")
+// PlsNotify notifies you of begining and end of pomododo
+func PlsNotify(status string) {
+	if status == "begin" {
+		os := checkOsVersion()
+		if os == "darwin" {
+			cmd := exec.Command("bash", "-c", `osascript -e  'display  notification  "Pomodoro begins!"  with  title  "Pomodoro"'`)
+			_, err := cmd.Output()
+			if err != nil {
+				fmt.Println("Error sending notification")
+			}
+		} else if os == "linux" {
+			notify = notificator.New(notificator.Options{
+				AppName: "Termodoro",
+			})
+			notify.Push("Termordoro", "Pomodoro begins!", "", notificator.UR_NORMAL)
+		} else if os == "window" {
+			fmt.Println("Notifications aren't supported on your platform.")
 		}
-	} else if os == "linux" {
-		notify = notificator.New(notificator.Options{
-			AppName: "Termodoro",
-		})
-		notify.Push("Termordoro", "Your pomodoro has ended!", "", notificator.UR_NORMAL)
-	} else if os == "window" {
-		fmt.Println("Notifications aren't supported on your platform.")
+	} else if status == "end" {
+		os := checkOsVersion()
+		if os == "darwin" {
+			cmd := exec.Command("bash", "-c", `osascript -e  'display  notification  "Your Pomodoro has ended!"  with  title  "Pomodoro"'`)
+			_, err := cmd.Output()
+			if err != nil {
+				fmt.Println("Error sending notification")
+			}
+		} else if os == "linux" {
+			notify = notificator.New(notificator.Options{
+				AppName: "Termodoro",
+			})
+			notify.Push("Termordoro", "Your pomodoro has ended!", "", notificator.UR_NORMAL)
+		} else if os == "window" {
+			fmt.Println("Notifications aren't supported on your platform.")
+		}
 	}
-
 }
