@@ -23,36 +23,11 @@ func TestGetCurrentTime(t *testing.T) {
 	t.Log("\n", ti)
 }
 
-func TestSetStartTime(t *testing.T) {
-	po := NewPomodoro()
-	SetStartTime(po, DefaultDuration)
-}
 
-func TestGetStartTime(t *testing.T) {
-	po := NewPomodoro()
-	SetStartTime(po, DefaultDuration)
-	st := GetStartTime(po)
-	t.Log("\n", st)
-}
-
-func TestGetPomodoroDuration(t *testing.T) {
-	po := NewPomodoro()
-	SetStartTime(po, DefaultDuration)
-	time.Sleep(1 * time.Microsecond)
-	pd := GetPomodoroDuration(po)
-	t.Log("\n", pd)
-}
-
-func TestSetPomodoroDuration(t *testing.T) {
-	n := NewPomodoro()
-	n.Start = GetCurrentTime()
-	SetPomodoroDuration(n)
-	t.Log("\n", n.Start, n.End)
-}
 
 func TestPomodoroTimer(t *testing.T) {
 	tn := time.Now().Local()
-	ti := Timer()
+	ti := Timer(1 * time.Second)
 	if ti.Format(layout) != tn.Add(1*time.Second).Format(layout) {
 		t.Fail()
 		t.Log("\nExpected:", tn, "\nReceived:", ti)
@@ -70,7 +45,7 @@ func TestFormatDate(t *testing.T) {
 
 func TestNewDefaultPomodoro(t *testing.T) {
 	// Prepare a custom pomodoro
-	n := NewDefaultPomodoro()
+	n := NewPomodoro()
 	st := n.Start.Format(layout)
 	ed := n.End.Format(layout)
 	ac := n.Active
@@ -90,21 +65,19 @@ func TestFormatOutput(t *testing.T) {
 	n := NewPomodoro()
 
 	n.Active = true
-	// Pass the string to the bit bucket operator (underscore) since we are not going to use it in the test
+
 	_, n.Start = FormatDate(2015, time.January, 1, 0, 0)
 	SetPomodoroDuration(n)
 
-	expected := []string{"active", "Jan 01 2015 at 00:00:01.000", "Jan 01 2015 at 00:01:01.000"}
+	expected := []string{"active", "Jan 01 2015 at 00:00:01.000", "Jan 01 2015 at 00:25:01.000"}
 	got := FormatOutput(n)
 
 	for i := 0; i < len(got); i++ {
-		// INFO: godoc -http=":6060"
-		// http://localhost:6060/ref/spec#Index_expressions
 		if strings.Compare(expected[i], got[i]) != 0 {
 			t.Fail()
 			t.Log(strings.Compare(expected[i], got[i]))
 		}
-		// t.Log("\nExpected:", expected[i], "\nReceived:", got[i])
+		 t.Log("\nExpected:", expected[i], "\nReceived:", got[i])
 	}
 
 	// Dont test this anymore, since it's effectively useless

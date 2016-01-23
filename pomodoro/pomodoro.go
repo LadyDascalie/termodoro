@@ -34,13 +34,13 @@ type Pomodoro struct {
 
 // NewPomodoro creates a pomodoro object in memory
 func NewPomodoro() *Pomodoro {
-	return &Pomodoro{Active: true, Duration: DefaultDuration}
+	return &Pomodoro{Active: true, Duration: 0}
 }
 
 // NewDefaultPomodoro sets the default values for a new pomodoro
 func NewDefaultPomodoro() (n *Pomodoro) {
 	n = NewPomodoro()
-	ending := Timer()
+	ending := Timer(DefaultDuration)
 	if ending.Format(Layout) != "" {
 		n.Active = true
 	}
@@ -58,35 +58,21 @@ func GetCurrentTime() (t time.Time) {
 	return
 }
 
-// GetPomodoroDuration calculates how much time has passed since the pomodoro started
-func GetPomodoroDuration(p *Pomodoro) (t time.Duration) {
-	t = time.Since(p.Start)
-	return
-}
-
 // SetPomodoroDuration sets the length of the pomodoro
 func SetPomodoroDuration(p *Pomodoro) {
 	p.End = p.Start.Add(PomodoroLength * time.Minute)
 }
 
-// SetStartTime sets the starting time of the pomodoro
-// later will be used to also set pomodoros in advance
-func SetStartTime(p *Pomodoro, duration time.Duration) {
-	//p.Start = GetCurrentTime()
-	fmt.Println(Timer())
-}
-
-// GetStartTime gets the time at which the pomodoro started
-func GetStartTime(p *Pomodoro) (st time.Time) {
-	st = p.Start
-	return
-}
-
 // Timer counts down the time until active pomodoro ends
-func Timer() (ending time.Time) {
+func Timer(duration time.Duration) (ending time.Time) {
 	fmt.Println(time.Now().Local())
-	timer := time.NewTimer(DefaultDuration)
-	<-timer.C
+	if duration > 0 * time.Second {
+		timer := time.NewTimer(duration)
+		<-timer.C
+	} else {
+		timer := time.NewTimer(DefaultDuration)
+		<-timer.C
+	}
 	ending = time.Now().Local()
 	return
 }
